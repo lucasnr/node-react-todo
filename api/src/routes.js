@@ -1,9 +1,8 @@
-const express = require('express');
+const { Router } = require('express');
+const UserController = require('./controllers/UserController');
 
-const routes = express.Router();
+const routes = Router();
 
-routes.get('/', (req, resp) => {
-	resp.send({ message: 'Goodbye World' });
-});
+routes.post('/users', UserController.store);
 
 module.exports = routes;
