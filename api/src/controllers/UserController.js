@@ -1,4 +1,5 @@
-const model = require('../models/User');
+const User = require('../models/User');
+const urlBuilder = require('./utils/urlBuilder');
 const sha256 = require('js-sha256');
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
 		const { name, email, avatar_url } = req.body;
 		const password = sha256(req.body.password);
 
-		const exists = await model.exists({ email });
+		const exists = await User.exists({ email });
 		if (exists) {
 			resp
 				.status(400)
@@ -14,13 +15,16 @@ module.exports = {
 			return;
 		}
 
-		const user = await model.create({
+		const user = await User.create({
 			name,
 			email,
 			password,
 			avatar_url,
 		});
 
-		resp.status(201).location(`/users/${user.id}`).json(user);
+		resp
+			.status(201)
+			.location(urlBuilder(req, `/users/${user.id}`))
+			.json(user);
 	},
 };
