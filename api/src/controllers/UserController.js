@@ -35,4 +35,11 @@ module.exports = {
 			.location(urlBuilder(req, `/users/${user.id}`))
 			.json(user);
 	},
+	find: async (req, resp) => {
+		const { id } = req.params;
+		const user = await User.findOne({ _id: id });
+
+		if (user) resp.json(user);
+		else resp.status(404).json({ message: "There's no user the given id" });
+	},
 };
