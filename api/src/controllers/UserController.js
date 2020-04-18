@@ -28,6 +28,7 @@ module.exports = {
 			avatar_url,
 		});
 
+		user.password = undefined;
 		resp
 			.status(201)
 			.location(urlBuilder(req, `/users/${user.id}`))
