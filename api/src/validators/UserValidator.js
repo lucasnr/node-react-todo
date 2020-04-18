@@ -9,4 +9,10 @@ module.exports = {
 			avatar_url: Joi.string().required(),
 		}),
 	}),
+	index: celebrate({
+		[Segments.QUERY]: Joi.object().keys({
+			page: Joi.number(),
+			size: Joi.number().greater(0),
+		}),
+	}),
 };
