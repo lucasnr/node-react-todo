@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const urlBuilder = require('./utils/urlBuilder');
 const pageBuilder = require('./utils/pageBuilder');
-const sha256 = require('js-sha256');
 
 module.exports = {
 	index: async (req, resp) => {
@@ -12,8 +11,7 @@ module.exports = {
 		else resp.json(users);
 	},
 	store: async (req, resp) => {
-		const { name, email, avatar_url } = req.body;
-		const password = sha256(req.body.password);
+		const { name, email, avatar_url, password } = req.body;
 
 		const exists = await User.exists({ email });
 		if (exists) {
