@@ -42,6 +42,23 @@ module.exports = {
 
 		return resp.json(task);
 	},
+	update: async (req, resp) => {
+		const { userId } = req;
+		const { id } = req.params;
+		const { title, text, datetime, done } = req.body;
+
+		const task = await Task.findOneAndUpdate(
+			{ _id: id, user: userId },
+			{ title, text, datetime, done },
+			{ new: true }
+		);
+		if (!task)
+			return resp
+				.status(404)
+				.json({ message: "There's no task with the given id" });
+
+		return resp.json(task);
+	},
 	destroy: async (req, resp) => {
 		const { id } = req.params;
 		const { userId } = req;

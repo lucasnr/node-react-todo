@@ -26,6 +26,12 @@ routes.get(
 	TaskValidator.find,
 	TaskController.find
 );
+routes.patch(
+	'/tasks/:id',
+	AuthMiddleware,
+	TaskValidator.update,
+	TaskController.update
+);
 routes.delete(
 	'/tasks/:id',
 	AuthMiddleware,
