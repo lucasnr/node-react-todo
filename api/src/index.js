@@ -11,6 +11,7 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/todo', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
+	useFindAndModify: false,
 });
 
 app.use(express.json());

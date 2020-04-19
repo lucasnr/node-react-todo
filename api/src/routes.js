@@ -26,5 +26,11 @@ routes.get(
 	TaskValidator.find,
 	TaskController.find
 );
+routes.delete(
+	'/tasks/:id',
+	AuthMiddleware,
+	TaskValidator.destroy,
+	TaskController.destroy
+);
 
 module.exports = routes;

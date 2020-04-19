@@ -1,5 +1,7 @@
 const { celebrate, Segments, Joi } = require('celebrate');
 
+const JoiMongoId = require('./utils/JoiMongoIdValidator');
+
 module.exports = {
 	index: celebrate({
 		[Segments.QUERY]: Joi.object().keys({
@@ -17,10 +19,12 @@ module.exports = {
 	}),
 	find: celebrate({
 		[Segments.PARAMS]: Joi.object().keys({
-			id: Joi.string()
-				.required()
-				.regex(/^[0-9a-fA-F]{24}$/)
-				.error(() => new Error('id must me in a valid pattern')),
+			id: JoiMongoId,
+		}),
+	}),
+	destroy: celebrate({
+		[Segments.PARAMS]: Joi.object().keys({
+			id: JoiMongoId,
 		}),
 	}),
 };

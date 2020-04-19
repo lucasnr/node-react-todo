@@ -42,4 +42,16 @@ module.exports = {
 
 		return resp.json(task);
 	},
+	destroy: async (req, resp) => {
+		const { id } = req.params;
+		const { userId } = req;
+
+		const removed = await Task.findOneAndDelete({ _id: id, user: userId });
+		if (!removed)
+			return resp
+				.status(404)
+				.json({ message: "There's no task with the given id" });
+
+		return resp.status(204).send();
+	},
 };
