@@ -3,8 +3,8 @@ const sha256 = require('js-sha256');
 
 const UserSchema = new mongoose.Schema({
 	name: String,
-	email: String,
-	password: { type: String, select: false },
+	email: { type: String, required: true },
+	password: { type: String, required: true, select: false },
 	avatar_url: String,
 });
 
