@@ -72,6 +72,14 @@ module.exports = {
 
 		return resp.json(user);
 	},
+	findByToken: async (req, resp) => {
+		const { userId: id } = req;
+		const user = await User.findById(id);
+
+		if (!user) return resp.status(404).json({ message: 'User not found' });
+
+		return resp.json(user);
+	},
 	login: async (req, resp) => {
 		const { email, password } = req.body;
 		const user = await User.findOne({ email }).select('+password');
