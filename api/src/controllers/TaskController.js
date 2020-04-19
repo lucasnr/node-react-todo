@@ -19,4 +19,16 @@ module.exports = {
 			.location(urlBuilder(req, `/tasks/${task.id}`))
 			.json(task);
 	},
+	find: async (req, resp) => {
+		const { userId } = req;
+		const { id } = req.params;
+
+		const task = await Task.find({ user: userId, _id: id }).populate('user');
+		if (!task)
+			return resp
+				.status(404)
+				.json({ message: "There's no task with the given id" });
+
+		return resp.json(task);
+	},
 };

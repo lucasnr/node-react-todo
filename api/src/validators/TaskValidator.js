@@ -9,4 +9,12 @@ module.exports = {
 			done: Joi.boolean().required(),
 		}),
 	}),
+	find: celebrate({
+		[Segments.PARAMS]: Joi.object().keys({
+			id: Joi.string()
+				.required()
+				.regex(/^[0-9a-fA-F]{24}$/)
+				.error(() => new Error('id must me in a valid pattern')),
+		}),
+	}),
 };

@@ -19,5 +19,11 @@ routes.post(
 	TaskValidator.store,
 	TaskController.store
 );
+routes.get(
+	'/tasks/:id',
+	AuthMiddleware,
+	TaskValidator.find,
+	TaskController.find
+);
 
 module.exports = routes;
