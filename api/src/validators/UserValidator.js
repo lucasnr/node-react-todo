@@ -13,7 +13,18 @@ module.exports = {
 		[Segments.BODY]: Joi.object().keys({
 			name: Joi.string().min(4),
 			email: Joi.string().required().email(),
-			password: Joi.string().required().min(8),
+			password: Joi.string().required().min(8).max(24),
+			avatar_url: Joi.string(),
+		}),
+	}),
+	update: celebrate({
+		[Segments.PARAMS]: Joi.object().keys({
+			id: JoiMongoId,
+		}),
+		[Segments.BODY]: Joi.object().keys({
+			name: Joi.string().min(4),
+			email: Joi.string().email(),
+			password: Joi.string().min(8).max(24),
 			avatar_url: Joi.string(),
 		}),
 	}),

@@ -10,6 +10,7 @@ const routes = Router();
 routes.get('/users', UserValidator.index, UserController.index);
 routes.post('/users', UserValidator.store, UserController.store);
 routes.get('/users/:id', UserValidator.find, UserController.find);
+routes.patch('/users/:id', UserValidator.update, UserController.update);
 
 routes.post('/login', UserValidator.login, UserController.login);
 

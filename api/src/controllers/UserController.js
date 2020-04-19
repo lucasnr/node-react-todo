@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const sha256 = require('js-sha256');
 
 const User = require('../models/User');
-const Task = require('../models/Task');
 const urlBuilder = require('./utils/urlBuilder');
 const pageBuilder = require('./utils/pageBuilder');
 
@@ -42,6 +41,27 @@ module.exports = {
 			.status(201)
 			.location(urlBuilder(req, `/users/${user.id}`))
 			.json({ user, token: generateToken(user.id) });
+	},
+	update: async (req, resp) => {
+		const { id } = req.params;
+		const { name, email, password, avatar_url } = req.body;
+		const user = await User.findById(id);
+
+		if (!user)
+			return resp.status(404).json({ message: "There's no user the given id" });
+
+		if (await User.exists({ email }))
+			return resp
+				.status(400)
+				.json({ message: "There's already a user with this e-mail" });
+
+		if (name) user.name = name;
+		if (email) user.email = email;
+		if (password) user.password = password;
+		if (avatar_url) user.avatar_url = avatar_url;
+		await user.save();
+
+		return resp.json(user);
 	},
 	find: async (req, resp) => {
 		const { id } = req.params;

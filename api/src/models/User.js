@@ -9,8 +9,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', async function (next) {
-	const crypted = sha256(this.password);
-	this.password = crypted;
+	if (this.__v === undefined) {
+		const crypted = sha256(this.password);
+		this.password = crypted;
+	}
 
 	next();
 });
