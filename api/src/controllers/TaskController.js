@@ -15,13 +15,13 @@ module.exports = {
 	},
 	store: async (req, resp) => {
 		const { userId } = req;
-		const { title, text, datetime, done } = req.body;
+		const { title, text, datetime } = req.body;
 
 		const task = await Task.create({
 			title,
 			text,
 			datetime,
-			done,
+			done: false,
 			user: userId,
 		});
 
@@ -45,17 +45,18 @@ module.exports = {
 	update: async (req, resp) => {
 		const { userId } = req;
 		const { id } = req.params;
-		const { title, text, datetime, done } = req.body;
-
-		const task = await Task.findOneAndUpdate(
-			{ _id: id, user: userId },
-			{ title, text, datetime, done },
-			{ new: true }
-		);
+		const task = await Task.findOne({ _id: id, user: userId });
 		if (!task)
 			return resp
 				.status(404)
 				.json({ message: "There's no task with the given id" });
+
+		const { title, text, datetime, done } = req.body;
+		if (title) task.title = title;
+		if (text) task.text = text;
+		if (datetime) task.datetime = datetime;
+		if (done) task.done = done;
+		await task.save();
 
 		return resp.json(task);
 	},

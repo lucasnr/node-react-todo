@@ -13,9 +13,8 @@ module.exports = {
 	store: celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			title: Joi.string().required().min(3),
-			text: Joi.string().required().min(10),
-			datetime: Joi.date().required(),
-			done: Joi.boolean().required(),
+			text: Joi.string().min(10),
+			datetime: Joi.date(),
 		}),
 	}),
 	find: celebrate({
@@ -28,10 +27,10 @@ module.exports = {
 			id: JoiMongoId,
 		}),
 		[Segments.BODY]: Joi.object().keys({
-			title: Joi.string().required().min(3),
-			text: Joi.string().required().min(10),
-			datetime: Joi.date().required(),
-			done: Joi.boolean().required(),
+			title: Joi.string().min(3),
+			text: Joi.string().min(10),
+			datetime: Joi.date(),
+			done: Joi.boolean(),
 		}),
 	}),
 	destroy: celebrate({
