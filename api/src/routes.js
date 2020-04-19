@@ -13,6 +13,7 @@ routes.get('/users/:id', UserValidator.find, UserController.find);
 
 routes.post('/login', UserValidator.login, UserController.login);
 
+routes.get('/tasks', AuthMiddleware, TaskValidator.index, TaskController.index);
 routes.post(
 	'/tasks',
 	AuthMiddleware,

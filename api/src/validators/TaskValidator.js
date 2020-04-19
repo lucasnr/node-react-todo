@@ -1,6 +1,12 @@
 const { celebrate, Segments, Joi } = require('celebrate');
 
 module.exports = {
+	index: celebrate({
+		[Segments.QUERY]: Joi.object().keys({
+			page: Joi.number().integer(),
+			size: Joi.number().integer().greater(0),
+		}),
+	}),
 	store: celebrate({
 		[Segments.BODY]: Joi.object().keys({
 			title: Joi.string().required().min(3),

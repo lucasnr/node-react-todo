@@ -1,7 +1,18 @@
 const Task = require('../models/Task');
 const urlBuilder = require('./utils/urlBuilder');
+const pageBuilder = require('./utils/pageBuilder');
 
 module.exports = {
+	index: async (req, resp) => {
+		const { userId } = req;
+		const { page = 0, size = 5 } = req.query;
+
+		const tasks = await pageBuilder(Task, page, size, { user: userId });
+
+		if (tasks.empty) return resp.status(204).send();
+
+		return resp.json(tasks);
+	},
 	store: async (req, resp) => {
 		const { userId } = req;
 		const { title, text, datetime, done } = req.body;
@@ -23,7 +34,7 @@ module.exports = {
 		const { userId } = req;
 		const { id } = req.params;
 
-		const task = await Task.find({ user: userId, _id: id }).populate('user');
+		const task = await Task.find({ user: userId, _id: id });
 		if (!task)
 			return resp
 				.status(404)
