@@ -5,9 +5,9 @@ const pageBuilder = require('./utils/pageBuilder');
 module.exports = {
 	index: async (req, resp) => {
 		const { userId } = req;
-		const { page = 0, size = 5 } = req.query;
+		const { page = 0, size = 5, done = false } = req.query;
 
-		const tasks = await pageBuilder(Task, page, size, { user: userId });
+		const tasks = await pageBuilder(Task, page, size, { user: userId, done });
 
 		if (tasks.empty) return resp.status(204).send();
 

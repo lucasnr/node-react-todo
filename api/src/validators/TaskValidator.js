@@ -7,6 +7,7 @@ module.exports = {
 		[Segments.QUERY]: Joi.object().keys({
 			page: Joi.number().integer(),
 			size: Joi.number().integer().greater(0),
+			done: Joi.boolean(),
 		}),
 	}),
 	store: celebrate({
