@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const sha256 = require('js-sha256');
+
 const User = require('../models/User');
+const Task = require('../models/Task');
 const urlBuilder = require('./utils/urlBuilder');
 const pageBuilder = require('./utils/pageBuilder');
 
@@ -23,12 +25,10 @@ module.exports = {
 		const { name, email, avatar_url, password } = req.body;
 
 		const exists = await User.exists({ email });
-		if (exists) {
-			resp
+		if (exists)
+			return resp
 				.status(400)
 				.json({ message: "There's already a user with this e-mail" });
-			return;
-		}
 
 		const user = await User.create({
 			name,
@@ -47,8 +47,10 @@ module.exports = {
 		const { id } = req.params;
 		const user = await User.findById(id);
 
-		if (user) resp.json(user);
-		else resp.status(404).json({ message: "There's no user the given id" });
+		if (!user)
+			return resp.status(404).json({ message: "There's no user the given id" });
+
+		return resp.json(user);
 	},
 	login: async (req, resp) => {
 		const { email, password } = req.body;
