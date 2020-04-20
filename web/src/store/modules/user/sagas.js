@@ -1,6 +1,6 @@
 import { call, put, all, takeLatest } from 'redux-saga/effects';
 
-import { getSignedUser, store } from '../../../services/api';
+import { getSignedUser, storeUser } from '../../../services/api';
 import { setToken } from '../../../services/auth';
 
 export function* setUser() {
@@ -10,7 +10,7 @@ export function* setUser() {
 
 export function* signupUser(action) {
 	const { email, password } = action.credentials;
-	const { data } = yield call(store, { email, password });
+	const { data } = yield call(storeUser, { email, password });
 
 	const { user, token } = data;
 	setToken(token);

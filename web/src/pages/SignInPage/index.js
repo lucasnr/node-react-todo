@@ -8,59 +8,59 @@ import Input from '../../components/Input';
 import { Form } from './styles';
 
 import { loginUser } from '../../services/api';
-import { signInToken } from '../../services/auth';
+import { setToken } from '../../services/auth';
 
 export default function SignInPage() {
-  const history = useHistory();
-  const [message, setMessage] = useState();
-  const [loading, setLoading] = useState(false);
+	const history = useHistory();
+	const [message, setMessage] = useState();
+	const [loading, setLoading] = useState(false);
 
-  const emailRef = useRef();
-  const passwordRef = useRef();
+	const emailRef = useRef();
+	const passwordRef = useRef();
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      setLoading(true);
+	const handleSubmit = useCallback(
+		(event) => {
+			event.preventDefault();
+			setLoading(true);
 
-      const user = {
-        email: emailRef.current.value,
-        password: passwordRef.current.value,
-      };
-      loginUser(user)
-        .then(({ data }) => {
-          signInToken(data.token);
-          history.push('/app');
-        })
-        .catch(({ response }) => setMessage(response.data.message))
-        .then(() => setLoading(false));
-    },
-    [history]
-  );
+			const user = {
+				email: emailRef.current.value,
+				password: passwordRef.current.value,
+			};
+			loginUser(user)
+				.then(({ data }) => {
+					setToken(data.token);
+					history.push('/app');
+				})
+				.catch(({ response }) => setMessage(response.data.message))
+				.then(() => setLoading(false));
+		},
+		[history]
+	);
 
-  return (
-    <Container loading={loading}>
-      {message && <Message>{message}</Message>}
-      <Logo />
+	return (
+		<Container loading={loading}>
+			{message && <Message>{message}</Message>}
+			<Logo />
 
-      <Form onSubmit={handleSubmit}>
-        <ButtonGroup>
-          <Input
-            ref={emailRef}
-            name="email"
-            placeholder="E-mail"
-            type="email"
-          />
-          <Input
-            ref={passwordRef}
-            name="password"
-            placeholder="Senha"
-            type="password"
-          />
-        </ButtonGroup>
+			<Form onSubmit={handleSubmit}>
+				<ButtonGroup>
+					<Input
+						ref={emailRef}
+						name="email"
+						placeholder="E-mail"
+						type="email"
+					/>
+					<Input
+						ref={passwordRef}
+						name="password"
+						placeholder="Senha"
+						type="password"
+					/>
+				</ButtonGroup>
 
-        <Button type="submit" text="Login" gradientText variant />
-      </Form>
-    </Container>
-  );
+				<Button type="submit" text="Login" gradientText variant />
+			</Form>
+		</Container>
+	);
 }
