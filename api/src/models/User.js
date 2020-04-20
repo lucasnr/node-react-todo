@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', async function (next) {
-	if (this.__v === undefined) {
+	if (this.password && this.password.length <= 24) {
 		const crypted = sha256(this.password);
 		this.password = crypted;
 	}
