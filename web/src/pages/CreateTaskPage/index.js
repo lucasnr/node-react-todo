@@ -1,86 +1,88 @@
 import React, { useState, useCallback, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Container, { Message } from '../../components/Container';
 import { Input, Textarea, Button, Buttons } from './styles';
 
-import { getToken } from '../../services/auth';
-import { createTask, getUserByToken } from '../../services/api';
+import { storeTask } from '../../services/api';
 
 import check from '../../assets/img/check.png';
 import trash from '../../assets/img/trash.png';
 
 export default function CreateTaskPage() {
-  const [message, setMessage] = useState();
-  const [displayDate, setDisplayDate] = useState(false);
-  const handleClick = useCallback(() => setDisplayDate(true), []);
+	const [message, setMessage] = useState();
+	const [displayDate, setDisplayDate] = useState(false);
+	const handleClick = useCallback(() => setDisplayDate(true), []);
 
-  const titleRef = useRef();
-  const textRef = useRef();
-  const datetimeRef = useRef();
+	const titleRef = useRef();
+	const textRef = useRef();
+	const datetimeRef = useRef();
 
-  const handleCreate = useCallback(() => {
-    const task = {
-      title: titleRef.current.value,
-      text: textRef.current.value,
-    };
+	const handleCreate = useCallback(() => {
+		setMessage(null);
 
-    if (datetimeRef.current) {
-      task.datetime = datetimeRef.current.value;
-      if (task.datetime === '') {
-        setMessage({ text: 'Data e hora inválida', success: false });
-        return;
-      }
-    }
-    if (task.title === '') {
-      setMessage({ text: 'Título inválida', success: false });
-      return;
-    }
+		const task = {
+			title: titleRef.current.value,
+		};
 
-    getUserByToken(getToken()).then(({ data }) => {
-      createTask(task, data.id)
-        .then(() =>
-          setMessage({
-            text: 'Tarefa criada com sucesso',
-            success: true,
-          })
-        )
-        .catch(({ response }) =>
-          setMessage({ text: response.data.message, success: false })
-        );
-    });
-  }, []);
+		const text = textRef.current.value;
+		if (text !== '') task.text = text;
+		if (datetimeRef.current) {
+			task.datetime = datetimeRef.current.value;
+			if (task.datetime === '') {
+				setMessage({ text: 'Invalid datetime', success: false });
+				return;
+			}
+		}
+		if (task.title === '') {
+			setMessage({ text: 'Invalid title', success: false });
+			return;
+		}
 
-  return (
-    <Container>
-      {message && <Message success={message.success}>{message.text}</Message>}
-      <section>
-        <Input
-          ref={titleRef}
-          placeholder="Adicionar título"
-          defaultValue="Trabalho"
-        />
-        <Textarea
-          ref={textRef}
-          placeholder="Adicionar descrição"
-          cols="30"
-          rows="5"
-        />
+		storeTask(task)
+			.then(() =>
+				setMessage({
+					text: 'Task created successfully',
+					success: true,
+				})
+			)
+			.catch(({ response }) =>
+				setMessage({ text: response.data.message, success: false })
+			);
+	}, []);
 
-        {displayDate ? (
-          <Input ref={datetimeRef} type="datetime-local" />
-        ) : (
-          <Button onClick={handleClick}>Adicionar data e hora</Button>
-        )}
-      </section>
+	const history = useHistory();
+	const handleDiscard = useCallback(() => {
+		history.push('/app');
+	}, [history]);
 
-      <Buttons>
-        <button onClick={handleCreate}>
-          <img src={check} alt="Ícone de certo" />
-        </button>
-        <button>
-          <img src={trash} alt="Ícone de lixeira" />
-        </button>
-      </Buttons>
-    </Container>
-  );
+	return (
+		<Container>
+			{message && <Message success={message.success}>{message.text}</Message>}
+			<section>
+				<Input ref={titleRef} placeholder="Add title" />
+				<Textarea
+					ref={textRef}
+					placeholder="Add description"
+					cols="30"
+					rows="5"
+				/>
+
+				{displayDate ? (
+					<Input ref={datetimeRef} type="datetime-local" />
+				) : (
+					<Button onClick={handleClick}>Add datetime</Button>
+				)}
+			</section>
+
+			<Buttons>
+				<button title="Create" onClick={handleCreate}>
+					<img src={check} alt="Check icon" />
+				</button>
+				<button title="Discard" onClick={handleDiscard}>
+					<img src={trash} alt="Trash can icon" />
+				</button>
+			</Buttons>
+		</Container>
+	);
 }

@@ -29,7 +29,7 @@ export default function UserPage() {
 				<Button onClick={() => handleClick('/app/tasks')} text="Tasks" />
 
 				<Button
-					onClick={() => handleClick('/app/tasks/new')}
+					onClick={() => handleClick('/app/tasks/create')}
 					text="Create"
 					gradientText
 				/>
