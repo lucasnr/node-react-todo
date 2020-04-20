@@ -13,6 +13,8 @@ export default function user(state = INITIAL_STATE, action) {
 			return { ...state, user: action.user, updateResponse: { error: false } };
 		case 'UPDATE_USER_FAILED':
 			return { ...state, updateResponse: { error: action.error } };
+		case 'SIGNOUT_USER_SUCCEEDED':
+			return INITIAL_STATE;
 		default:
 			return state;
 	}

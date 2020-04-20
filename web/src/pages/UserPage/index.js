@@ -1,17 +1,22 @@
 import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, Redirect } from 'react-router-dom';
 
 import Container from '../../components/Container';
 import Button, { ButtonGroup } from '../../components/Button';
-import { Avatar } from './styles';
+import { Avatar, SignoutButton } from './styles';
 
 export default function UserPage() {
 	const history = useHistory();
 	const user = useSelector((state) => state.user.signed);
 	const handleClick = useCallback((route) => history.push(route), [history]);
 
-	return (
+	const dispatch = useDispatch();
+	const handleSignout = useCallback(() => {
+		dispatch({ type: 'SIGNOUT_USER_REQUESTED' });
+	}, [dispatch]);
+
+	return user ? (
 		<Container>
 			<Avatar
 				src={
@@ -33,7 +38,11 @@ export default function UserPage() {
 					text="Create"
 					gradientText
 				/>
+
+				<SignoutButton text="Sign out" onClick={handleSignout} />
 			</ButtonGroup>
 		</Container>
+	) : (
+		<Redirect to="signin" />
 	);
 }

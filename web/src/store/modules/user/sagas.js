@@ -6,7 +6,7 @@ import {
 	loginUser,
 	updateUser,
 } from '../../../services/api';
-import { setToken } from '../../../services/auth';
+import { setToken, removeToken } from '../../../services/auth';
 
 export function* set() {
 	try {
@@ -53,11 +53,17 @@ export function* update(action) {
 	}
 }
 
+export function* signout(action) {
+	removeToken();
+	yield put({ type: 'SIGNOUT_USER_SUCCEEDED' });
+}
+
 export default function* rootSaga() {
 	yield all([
 		takeLatest('SET_USER_REQUESTED', set),
 		takeLatest('SIGNUP_USER_REQUESTED', signup),
 		takeLatest('SIGNIN_USER_REQUESTED', signin),
 		takeLatest('UPDATE_USER_REQUESTED', update),
+		takeLatest('SIGNOUT_USER_REQUESTED', signout),
 	]);
 }
