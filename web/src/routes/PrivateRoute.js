@@ -41,6 +41,6 @@ export default function PrivateRoute({ ...props }) {
 	) : allowed ? (
 		<Route {...props} />
 	) : (
-		<Redirect to="/" />
+		<Redirect to="/signin" />
 	);
 }
