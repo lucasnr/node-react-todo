@@ -30,6 +30,7 @@ export function* signup(action) {
 export function* signin(action) {
 	try {
 		const { data } = yield call(loginUser, action.credentials);
+		setToken(data.token);
 		yield put({ type: 'SIGNIN_USER_SUCCEEDED', user: data.user });
 	} catch (error) {
 		const { data } = error.response;
