@@ -1,100 +1,99 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container, { Message } from '../../components/Container';
 import Button, { ButtonGroup } from '../../components/Button';
 import { AvatarContainer, Avatar, Input, Form } from './styles';
 
-import { getToken } from '../../services/auth';
-import { getUserByToken, updateUser } from '../../services/api';
-
 export default function ProfileEditPage() {
-  const [displayPass, setDisplayPass] = useState(false);
-  const [message, setMessage] = useState();
-  const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(true);
+	const [displayPass, setDisplayPass] = useState(false);
+	const [message, setMessage] = useState();
+	const [loading, setLoading] = useState(false);
 
-  const nameRef = useRef();
-  const emailRef = useRef();
-  const passwordRef = useRef();
+	const dispatch = useDispatch();
+	const { signed: user, updateResponse: response } = useSelector(
+		(state) => state.user
+	);
 
-  useEffect(() => {
-    getUserByToken(getToken()).then(({ data }) => {
-      setUser(data);
-      setLoading(false);
-    });
-  }, []);
+	const nameRef = useRef();
+	const emailRef = useRef();
+	const passwordRef = useRef();
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      setLoading(true);
+	const handleSubmit = useCallback(
+		(event) => {
+			event.preventDefault();
+			setMessage(null);
+			setLoading(true);
 
-      const newUser = {
-        id: user.id,
-        name: nameRef.current.value,
-      };
+			const newUser = {
+				id: user._id,
+			};
 
-      if (emailRef.current.value !== user.email)
-        newUser.email = emailRef.current.value;
-      if (passwordRef.current) newUser.password = passwordRef.current.value;
+			const { value: email } = emailRef.current;
+			if (email !== user.email) newUser.email = email;
+			if (passwordRef.current) newUser.password = passwordRef.current.value;
+			const { value: name } = nameRef.current;
+			if (name !== '') newUser.name = name;
 
-      updateUser(newUser)
-        .then(({ data }) => {
-          setMessage({ text: 'Sucesso ao editar perfil', success: true });
-          setUser(data);
-        })
-        .catch(({ response }) =>
-          setMessage({ text: response.data.message, success: false })
-        )
-        .then(() => setLoading(false));
-    },
-    [user]
-  );
+			dispatch({ type: 'UPDATE_USER_REQUESTED', user: newUser });
+		},
+		[dispatch, user]
+	);
+	const handleClick = useCallback(() => setDisplayPass(true), []);
 
-  const handleClick = useCallback(() => setDisplayPass(true), []);
+	useEffect(() => {
+		if (!response) return;
 
-  return (
-    <Container loading={loading}>
-      {message && <Message success={message.success}>{message.text}</Message>}
-      <AvatarContainer>
-        <Avatar
-          src={
-            user.avatar_url ||
-            'https://pm1.narvii.com/6279/c42f623be3d71b57c8c3fcaa2d03c182ee824dd0_hq.jpg'
-          }
-        />
-        <button />
-      </AvatarContainer>
+		if (response.error)
+			setMessage({ text: response.error.message, success: false });
+		else setMessage({ text: 'User updated successfully', success: true });
 
-      <Form onSubmit={handleSubmit}>
-        <ButtonGroup>
-          <Input
-            placeholder="Digite seu nome"
-            name="nome"
-            ref={nameRef}
-            defaultValue={user.name}
-          />
-          <Input
-            placeholder="Digite um e-mail"
-            name="email"
-            ref={emailRef}
-            defaultValue={user.email}
-          />
+		setLoading(false);
+	}, [response]);
 
-          {displayPass ? (
-            <Input
-              placeholder="Digite uma senha"
-              name="password"
-              type="password"
-              ref={passwordRef}
-            />
-          ) : (
-            <Button onClick={handleClick} text="Alterar senha" />
-          )}
-        </ButtonGroup>
+	return (
+		<Container loading={loading}>
+			{message && <Message success={message.success}>{message.text}</Message>}
+			<AvatarContainer>
+				<Avatar
+					src={
+						user.avatar_url ||
+						'https://pm1.narvii.com/6279/c42f623be3d71b57c8c3fcaa2d03c182ee824dd0_hq.jpg'
+					}
+				/>
+				<button />
+			</AvatarContainer>
 
-        <Button type="submit" text="Salvar" variant />
-      </Form>
-    </Container>
-  );
+			<Form onSubmit={handleSubmit}>
+				<ButtonGroup>
+					<Input
+						placeholder="Enter your name"
+						name="name"
+						ref={nameRef}
+						defaultValue={user.name}
+					/>
+					<Input
+						placeholder="Enter your e-mail"
+						name="email"
+						type="email"
+						ref={emailRef}
+						defaultValue={user.email}
+					/>
+
+					{displayPass ? (
+						<Input
+							placeholder="Enter your new password"
+							name="password"
+							type="password"
+							ref={passwordRef}
+						/>
+					) : (
+						<Button onClick={handleClick} text="Change your password" />
+					)}
+				</ButtonGroup>
+
+				<Button type="submit" text="Save" variant />
+			</Form>
+		</Container>
+	);
 }

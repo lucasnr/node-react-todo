@@ -1,15 +1,20 @@
 import { call, put, all, takeLatest } from 'redux-saga/effects';
 
-import { getSignedUser, storeUser, loginUser } from '../../../services/api';
+import {
+	getSignedUser,
+	storeUser,
+	loginUser,
+	updateUser,
+} from '../../../services/api';
 import { setToken } from '../../../services/auth';
 
 export function* set() {
 	try {
 		const { data: user } = yield call(getSignedUser);
-		yield put({ type: 'SIGNIN_USER_SUCCEEDED', user });
+		yield put({ type: 'SET_USER_SUCCEEDED', user });
 	} catch (error) {
 		const { data } = error.response;
-		yield put({ type: 'SIGNIN_USER_FAILED', error: data });
+		yield put({ type: 'SET_USER_FAILED', error: data });
 	}
 }
 
@@ -20,10 +25,10 @@ export function* signup(action) {
 
 		const { user, token } = data;
 		setToken(token);
-		yield put({ type: 'SIGNIN_USER_SUCCEEDED', user });
+		yield put({ type: 'SET_USER_SUCCEEDED', user });
 	} catch (error) {
 		const { data } = error.response;
-		yield put({ type: 'SIGNIN_USER_FAILED', error: data });
+		yield put({ type: 'SET_USER_FAILED', error: data });
 	}
 }
 
@@ -31,10 +36,20 @@ export function* signin(action) {
 	try {
 		const { data } = yield call(loginUser, action.credentials);
 		setToken(data.token);
-		yield put({ type: 'SIGNIN_USER_SUCCEEDED', user: data.user });
+		yield put({ type: 'SET_USER_SUCCEEDED', user: data.user });
 	} catch (error) {
 		const { data } = error.response;
-		yield put({ type: 'SIGNIN_USER_FAILED', error: data });
+		yield put({ type: 'SET_USER_FAILED', error: data });
+	}
+}
+
+export function* update(action) {
+	try {
+		const { data } = yield call(updateUser, action.user);
+		yield put({ type: 'UPDATE_USER_SUCCEEDED', user: data.user });
+	} catch (error) {
+		const { data } = error.response;
+		yield put({ type: 'UPDATE_USER_FAILED', error: data });
 	}
 }
 
@@ -43,5 +58,6 @@ export default function* rootSaga() {
 		takeLatest('SET_USER_REQUESTED', set),
 		takeLatest('SIGNUP_USER_REQUESTED', signup),
 		takeLatest('SIGNIN_USER_REQUESTED', signin),
+		takeLatest('UPDATE_USER_REQUESTED', update),
 	]);
 }
