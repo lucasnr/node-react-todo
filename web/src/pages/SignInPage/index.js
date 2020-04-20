@@ -54,12 +54,12 @@ export default function SignInPage() {
 					<Input
 						ref={passwordRef}
 						name="password"
-						placeholder="Senha"
+						placeholder="Password"
 						type="password"
 					/>
 				</ButtonGroup>
 
-				<Button type="submit" text="Login" gradientText variant />
+				<Button type="submit" text="Sign in" gradientText variant />
 			</Form>
 		</Container>
 	);

@@ -26,7 +26,7 @@ export default function SignUpPage() {
 			const passwordConfirm = confirmPassRef.current.value;
 
 			if (password !== passwordConfirm) {
-				setMessage('As senhas não coincidem');
+				setMessage("Passwords don't match");
 				setLoading(false);
 				return;
 			} else setMessage(null);
@@ -58,23 +58,23 @@ export default function SignUpPage() {
 				<ButtonGroup>
 					<Input
 						name="email"
-						placeholder="Digite seu e-mail"
+						placeholder="Enter your e-mail"
 						type="email"
 						ref={emailRef}
 					/>
 					<Input
 						name="password"
-						placeholder="Crie uma senha"
+						placeholder="Create a password"
 						type="password"
 						ref={passwordRef}
 					/>
 					<Input
-						placeholder="Confirme a senha"
+						placeholder="Confirm your password"
 						type="password"
 						ref={confirmPassRef}
 					/>
 
-					<Button type="submit" text="Criar conta" variant />
+					<Button type="submit" text="Create account" variant />
 				</ButtonGroup>
 			</Form>
 		</Container>
