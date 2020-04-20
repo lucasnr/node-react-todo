@@ -40,7 +40,7 @@ export default function SignUpPage() {
 		[dispatch]
 	);
 
-	const error = useSelector((state) => state.user && state.user.error);
+	const { signupError: error } = useSelector((state) => state.user);
 	useEffect(() => {
 		if (error) {
 			setMessage(error.message);

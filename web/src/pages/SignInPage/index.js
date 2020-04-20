@@ -30,7 +30,7 @@ export default function SignInPage() {
 		[dispatch]
 	);
 
-	const error = useSelector((state) => state.user && state.user.error);
+	const { signinError: error } = useSelector((state) => state.user);
 	useEffect(() => {
 		if (error) {
 			setMessage(error.message);

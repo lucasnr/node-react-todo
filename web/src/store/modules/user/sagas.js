@@ -28,7 +28,7 @@ export function* signup(action) {
 		yield put({ type: 'SET_USER_SUCCEEDED', user });
 	} catch (error) {
 		const { data } = error.response;
-		yield put({ type: 'SET_USER_FAILED', error: data });
+		yield put({ type: 'SIGNUP_USER_FAILED', error: data });
 	}
 }
 
@@ -39,7 +39,7 @@ export function* signin(action) {
 		yield put({ type: 'SET_USER_SUCCEEDED', user: data.user });
 	} catch (error) {
 		const { data } = error.response;
-		yield put({ type: 'SET_USER_FAILED', error: data });
+		yield put({ type: 'SIGNIN_USER_FAILED', error: data });
 	}
 }
 
