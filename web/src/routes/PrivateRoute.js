@@ -11,7 +11,7 @@ export default function PrivateRoute({ ...props }) {
 	const [allowed, setAllowed] = useState(false);
 
 	const dispatch = useDispatch();
-	const { signed: user, error } = useSelector((state) => state.user.signed);
+	const { signed: user, error } = useSelector((state) => state.user);
 	useEffect(() => {
 		if (user) {
 			setLoading(false);
@@ -29,9 +29,11 @@ export default function PrivateRoute({ ...props }) {
 	}, [dispatch, user]);
 
 	useEffect(() => {
-		removeToken();
-		setLoading(false);
-		setAllowed(false);
+		if (error) {
+			removeToken();
+			setLoading(false);
+			setAllowed(false);
+		}
 	}, [error]);
 
 	return loading ? (
