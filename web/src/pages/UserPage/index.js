@@ -43,6 +43,6 @@ export default function UserPage() {
 			</ButtonGroup>
 		</Container>
 	) : (
-		<Redirect to="signin" />
+		<Redirect to="/signin" />
 	);
 }
