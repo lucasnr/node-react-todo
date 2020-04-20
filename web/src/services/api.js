@@ -5,10 +5,9 @@ const api = axios.create({
 	baseURL: 'http://localhost:3333',
 });
 
-const headers = () =>
-	new Headers({
-		Authorization: `Bearer ${getToken()}`,
-	});
+const headers = () => ({
+	Authorization: `Bearer ${getToken()}`,
+});
 
 export const storeUser = (user) => api.post('/users', user);
 export const updateUser = (user) => api.patch(`/users/${user.id}`, user);

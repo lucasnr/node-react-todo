@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container, { Message } from '../../components/Container';
 import Logo from '../../components/Logo';
@@ -39,6 +39,14 @@ export default function SignUpPage() {
 		},
 		[dispatch]
 	);
+
+	const error = useSelector((state) => state.user && state.user.error);
+	useEffect(() => {
+		if (error) {
+			setMessage(error.message);
+			setLoading(false);
+		}
+	}, [error]);
 
 	return (
 		<Container loading={loading}>

@@ -4,14 +4,14 @@ import { Route, Redirect } from 'react-router-dom';
 
 import Container from '../components/Container';
 
-import { getToken } from '../services/auth';
+import { getToken, removeToken } from '../services/auth';
 
 export default function PrivateRoute({ ...props }) {
 	const [loading, setLoading] = useState(true);
 	const [allowed, setAllowed] = useState(false);
 
 	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user);
+	const { signed: user, error } = useSelector((state) => state.user.signed);
 	useEffect(() => {
 		if (user) {
 			setLoading(false);
@@ -26,7 +26,13 @@ export default function PrivateRoute({ ...props }) {
 		}
 
 		dispatch({ type: 'SET_USER_REQUESTED' });
-	}, [user]);
+	}, [dispatch, user]);
+
+	useEffect(() => {
+		removeToken();
+		setLoading(false);
+		setAllowed(false);
+	}, [error]);
 
 	return loading ? (
 		<Container loading={true} />

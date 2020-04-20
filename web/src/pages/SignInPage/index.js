@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container, { Message } from '../../components/Container';
 import Logo from '../../components/Logo';
@@ -7,13 +7,10 @@ import Button, { ButtonGroup } from '../../components/Button';
 import Input from '../../components/Input';
 import { Form } from './styles';
 
-import { loginUser } from '../../services/api';
-import { setToken } from '../../services/auth';
-
 export default function SignInPage() {
-	const history = useHistory();
 	const [message, setMessage] = useState();
 	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
 
 	const emailRef = useRef();
 	const passwordRef = useRef();
@@ -23,20 +20,23 @@ export default function SignInPage() {
 			event.preventDefault();
 			setLoading(true);
 
-			const user = {
+			const credentials = {
 				email: emailRef.current.value,
 				password: passwordRef.current.value,
 			};
-			loginUser(user)
-				.then(({ data }) => {
-					setToken(data.token);
-					history.push('/app');
-				})
-				.catch(({ response }) => setMessage(response.data.message))
-				.then(() => setLoading(false));
+
+			dispatch({ type: 'SIGNIN_USER_REQUESTED', credentials });
 		},
-		[history]
+		[dispatch]
 	);
+
+	const error = useSelector((state) => state.user && state.user.error);
+	useEffect(() => {
+		if (error) {
+			setMessage(error.message);
+			setLoading(false);
+		}
+	}, [error]);
 
 	return (
 		<Container loading={loading}>
