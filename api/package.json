@@ -4,6 +4,9 @@
 	"description": "NodeJS api with MongoDB",
 	"author": "Lucas Nascimento",
 	"license": "MIT",
+	"engines": {
+		"node": "12.16.x"
+	},
 	"scripts": {
 		"start": "node src/index.js",
 		"dev": "nodemon src/index.js"
