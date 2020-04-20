@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 
 import Container from '../../components/Container';
-import ScrollContainer, { ShowMore } from '../../components/ScrollContainer';
+import ScrollContainer, {
+	ShowMore,
+	NoContent,
+} from '../../components/ScrollContainer';
 import Title from '../../components/Title';
 import Task from './Task';
 
@@ -35,8 +38,17 @@ export default function TaskDoneListPage() {
 			<Title>Done Tasks</Title>
 
 			<ScrollContainer>
-				{tasks &&
-					tasks.content.map((item) => <Task key={item._id} {...item} />)}
+				{tasks ? (
+					<>
+						{tasks.content.map((item) => (
+							<Task key={item._id} {...item} />
+						))}
+					</>
+				) : (
+					<NoContent>
+						After you define a task as done it will be displayed here
+					</NoContent>
+				)}
 
 				{tasks && !tasks.last && (
 					<ShowMore onClick={handleShowMore}>

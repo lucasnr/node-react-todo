@@ -2,7 +2,10 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Container from '../../components/Container';
-import ScrollContainer, { ShowMore } from '../../components/ScrollContainer';
+import ScrollContainer, {
+	ShowMore,
+	NoContent,
+} from '../../components/ScrollContainer';
 import Button from '../../components/Button';
 import Title from '../../components/Title';
 import Task from './Task';
@@ -49,8 +52,17 @@ export default function TaskListPage() {
 			<Title>Tasks</Title>
 
 			<ScrollContainer>
-				{tasks &&
-					tasks.content.map((item) => <Task key={item._id} {...item} />)}
+				{tasks ? (
+					<>
+						{tasks.content.map((item) => (
+							<Task key={item._id} {...item} />
+						))}
+					</>
+				) : (
+					<NoContent>
+						Try creating some tasks and they will be displayed here
+					</NoContent>
+				)}
 
 				{tasks && !tasks.last && (
 					<ShowMore onClick={handleShowMore}>
