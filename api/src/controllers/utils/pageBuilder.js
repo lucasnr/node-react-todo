@@ -4,12 +4,11 @@ module.exports = async (model, page = 0, size = 5, query = {}) => {
 		.skip(page * size)
 		.limit(size);
 
-	const totalElements = await model.countDocuments();
+	const totalElements = await model.countDocuments(query);
 	const totalPages = Math.ceil(totalElements / size);
 	const numberOfElements = content.length;
 	const first = page === 0;
-	const last =
-		totalElements === numberOfElements ? true : totalElements % size !== 0;
+	const last = page + 1 === totalPages;
 	const empty = content.length === 0;
 
 	return {

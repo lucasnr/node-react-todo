@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Container from '../../components/Container';
@@ -19,9 +19,10 @@ export default function TaskListPage() {
 	]);
 
 	const handleShowMore = useCallback(() => {
-		listTasks(false, tasks.page + 1).then(({ data }) =>
-			setTasks({ ...data, content: [...tasks.content, ...data.content] })
-		);
+		listTasks(false, tasks.page + 1).then(({ data }) => {
+			console.log(data);
+			setTasks({ ...data, content: [...tasks.content, ...data.content] });
+		});
 	}, [tasks]);
 
 	useEffect(() => {
@@ -33,9 +34,19 @@ export default function TaskListPage() {
 		fetchData();
 	}, []);
 
+	const more = useMemo(() => {
+		if (!tasks) return 0;
+
+		if (tasks.page !== tasks.totalPages - 2) return tasks.size;
+
+		return tasks.totalElements % tasks.size === 0
+			? tasks.size
+			: tasks.totalElements % tasks.size;
+	}, [tasks]);
+
 	return (
 		<Container loading={loading}>
-			<Title>Tarefas</Title>
+			<Title>Tasks</Title>
 
 			<ScrollContainer>
 				{tasks &&
@@ -43,16 +54,12 @@ export default function TaskListPage() {
 
 				{tasks && !tasks.last && (
 					<ShowMore onClick={handleShowMore}>
-						Mostrar mais{' '}
-						{tasks.totalElements % tasks.size === 0
-							? tasks.size
-							: tasks.totalElements % tasks.size}{' '}
-						tarefas
+						Show {more} more {more === 1 ? 'task' : 'tasks'}
 					</ShowMore>
 				)}
 			</ScrollContainer>
 
-			<Button onClick={handleClick} text="Tarefas concluídas" />
+			<Button onClick={handleClick} text="Done tasks" />
 		</Container>
 	);
 }
