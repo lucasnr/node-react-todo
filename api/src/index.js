@@ -8,7 +8,7 @@ const routes = require('./routes');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/todo', {
+mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(routes);
 app.use(errors());
 
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {
 	console.log(`App running at port ${PORT}`);
 });
