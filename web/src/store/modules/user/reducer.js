@@ -14,7 +14,7 @@ export default function user(state = INITIAL_STATE, action) {
 		case 'SIGNIN_USER_FAILED':
 			return { ...state, signinError: action.error };
 		case 'UPDATE_USER_SUCCEEDED':
-			return { ...state, user: action.user, updateResponse: { error: false } };
+			return { signed: action.user, updateResponse: { error: false } };
 		case 'UPDATE_USER_FAILED':
 			return { ...state, updateResponse: { error: action.error } };
 		case 'SIGNOUT_USER_SUCCEEDED':

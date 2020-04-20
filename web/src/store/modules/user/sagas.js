@@ -45,8 +45,8 @@ export function* signin(action) {
 
 export function* update(action) {
 	try {
-		const { data } = yield call(updateUser, action.user);
-		yield put({ type: 'UPDATE_USER_SUCCEEDED', user: data.user });
+		const { data: user } = yield call(updateUser, action.user);
+		yield put({ type: 'UPDATE_USER_SUCCEEDED', user });
 	} catch (error) {
 		const { data } = error.response;
 		yield put({ type: 'UPDATE_USER_FAILED', error: data });
