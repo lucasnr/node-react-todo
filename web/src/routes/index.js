@@ -12,7 +12,7 @@ import UserPage from '../pages/UserPage';
 import ProfileEditPage from '../pages/ProfileEditPage';
 import TaskListPage from '../pages/TaskListPage';
 import CreateTaskPage from '../pages/CreateTaskPage';
-// import TaskDoneListPage from '../pages/TaskDoneListPage';
+import TaskDoneListPage from '../pages/TaskDoneListPage';
 
 export default function Routes() {
 	return (
@@ -25,7 +25,7 @@ export default function Routes() {
 			<PrivateRoute path="/app/profile" exact component={ProfileEditPage} />
 			<PrivateRoute path="/app/tasks" exact component={TaskListPage} />
 			<PrivateRoute path="/app/tasks/create" exact component={CreateTaskPage} />
-			{/* <PrivateRoute path="/app/tasks/done" exact component={TaskDoneListPage} /> */}
+			<PrivateRoute path="/app/tasks/done" exact component={TaskDoneListPage} />
 		</Switch>
 	);
 }
