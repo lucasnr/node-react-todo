@@ -1,6 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
 import Container, { Message } from '../../components/Container';
 import Logo from '../../components/Logo';
@@ -8,14 +7,11 @@ import Button, { ButtonGroup } from '../../components/Button';
 import Input from '../../components/Input';
 import { Form } from './styles';
 
-import { createUser } from '../../services/api';
-
 export default function SignUpPage() {
 	const [message, setMessage] = useState();
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useDispatch();
-	const history = useHistory();
 
 	const emailRef = useRef();
 	const passwordRef = useRef();
@@ -37,11 +33,11 @@ export default function SignUpPage() {
 
 			const email = emailRef.current.value;
 			dispatch({
-				type: 'SIGNUP_USER_REQUEST',
+				type: 'SIGNUP_USER_REQUESTED',
 				credentials: { email, password },
 			});
 		},
-		[history]
+		[dispatch]
 	);
 
 	return (
