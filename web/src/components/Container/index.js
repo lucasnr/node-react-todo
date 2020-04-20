@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { Wrapper, Content, Message, Loading, LoadingContainer } from './styles';
+import { Wrapper, Content, Message, Loading, GoBackButton } from './styles';
 
 export default function Container({ children, loading }) {
+	const history = useHistory();
+	const handleClick = useCallback(() => {
+		history.goBack();
+	}, [history]);
+
 	return (
 		<Wrapper>
-			{loading && (
-				<LoadingContainer>
-					<Loading />
-				</LoadingContainer>
-			)}
-			<Content>{children}</Content>
+			{loading && <Loading />}
+			<Content>
+				<GoBackButton onClick={handleClick} />
+				{children}
+			</Content>
 		</Wrapper>
 	);
 }

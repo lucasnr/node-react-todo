@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { backgroundColor, primaryColor, secondaryColor } from '../../colors';
@@ -22,8 +23,13 @@ export const Content = styled.div`
 	position: relative;
 	width: 100%;
 
-	& > *:not(:last-child) {
-		margin-bottom: 5rem;
+	& > * {
+		margin-bottom: 3rem;
+		margin-top: 1rem;
+
+		&:last-child {
+			margin-bottom: auto;
+		}
 	}
 `;
 
@@ -73,18 +79,7 @@ const background = keyframes`
   }
 `;
 
-export const LoadingContainer = styled.div`
-	align-items: center;
-	background-color: ${backgroundColor};
-	display: flex;
-	height: 100vh;
-	justify-content: center;
-	position: fixed;
-	width: 100vw;
-	z-index: 5;
-`;
-
-export const Loading = styled.span`
+export const LoadingContent = styled.span`
 	animation: ${rotate} 0.75s linear infinite forwards;
 	background-color: transparent;
 	border: 4px solid;
@@ -101,3 +96,43 @@ export const Loading = styled.span`
 		width: 4rem;
 	}
 `;
+
+export const Loading = styled.div`
+	align-items: center;
+	background-color: ${backgroundColor};
+	display: flex;
+	height: 100vh;
+	justify-content: center;
+	position: fixed;
+	width: 100vw;
+	z-index: 5;
+`;
+
+Loading.defaultProps = {
+	children: <LoadingContent />,
+};
+
+export const GoBackButton = styled.button`
+	background-color: transparent;
+	border: none;
+	border-radius: 0.25rem;
+	color: #fff;
+	display: flex;
+	font-size: 0.75rem;
+	margin: 0px;
+	margin-bottom: auto !important;
+	margin-right: auto;
+	padding: 0.625rem 1rem;
+	padding-left: 0px;
+`;
+
+GoBackButton.defaultProps = {
+	children: (
+		<svg style={{ width: 24, height: 24 }} viewBox="0 0 24 24">
+			<path
+				fill="currentColor"
+				d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"
+			/>
+		</svg>
+	),
+};
