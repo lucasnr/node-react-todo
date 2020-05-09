@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 
-import Container, { Message } from '../../components/Container';
+import Container from '../../components/Container';
 import Button, { ButtonGroup } from '../../components/Button';
 import { AvatarContainer, Avatar, Input, Form } from './styles';
 
 export default function ProfileEditPage() {
 	const [displayPass, setDisplayPass] = useState(false);
-	const [message, setMessage] = useState();
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useDispatch();
@@ -15,27 +16,35 @@ export default function ProfileEditPage() {
 		(state) => state.user
 	);
 
-	const nameRef = useRef();
-	const emailRef = useRef();
-	const passwordRef = useRef();
-
 	const handleSubmit = useCallback(
-		(event) => {
-			event.preventDefault();
-			setMessage(null);
+		async (data) => {
 			setLoading(true);
 
-			const newUser = {
-				id: user._id,
-			};
+			try {
+				const schema = Yup.object().shape({
+					name: Yup.string().min(4),
+					email: Yup.string().email(),
+					password: Yup.string().min(8),
+				});
 
-			const { value: email } = emailRef.current;
-			if (email !== user.email) newUser.email = email;
-			if (passwordRef.current) newUser.password = passwordRef.current.value;
-			const { value: name } = nameRef.current;
-			if (name !== '') newUser.name = name;
+				await schema.validate(data, {
+					abortEarly: false,
+				});
 
-			dispatch({ type: 'UPDATE_USER_REQUESTED', user: newUser });
+				const { email, name, password } = data;
+				const toUpdate = {
+					id: user._id,
+					name,
+				};
+
+				if (email !== user.email) toUpdate.email = email;
+				if (password) toUpdate.password = password;
+
+				dispatch({ type: 'UPDATE_USER_REQUESTED', user: toUpdate });
+			} catch (err) {
+				setLoading(false);
+				err.errors.forEach(toast.error);
+			}
 		},
 		[dispatch, user]
 	);
@@ -44,16 +53,14 @@ export default function ProfileEditPage() {
 	useEffect(() => {
 		if (!response) return;
 
-		if (response.error)
-			setMessage({ text: response.error.message, success: false });
-		else setMessage({ text: 'User updated successfully', success: true });
+		if (response.error) toast.error(response.error.message);
+		else toast.success('User updated successfully');
 
 		setLoading(false);
 	}, [response]);
 
 	return (
 		<Container loading={loading}>
-			{message && <Message success={message.success}>{message.text}</Message>}
 			<AvatarContainer>
 				<Avatar
 					src={
@@ -69,14 +76,12 @@ export default function ProfileEditPage() {
 					<Input
 						placeholder="Enter your name"
 						name="name"
-						ref={nameRef}
 						defaultValue={user.name}
 					/>
 					<Input
 						placeholder="Enter your e-mail"
 						name="email"
 						type="email"
-						ref={emailRef}
 						defaultValue={user.email}
 					/>
 
@@ -85,10 +90,13 @@ export default function ProfileEditPage() {
 							placeholder="Enter your new password"
 							name="password"
 							type="password"
-							ref={passwordRef}
 						/>
 					) : (
-						<Button onClick={handleClick} text="Change your password" />
+						<Button
+							type="button"
+							onClick={handleClick}
+							text="Change your password"
+						/>
 					)}
 				</ButtonGroup>
 

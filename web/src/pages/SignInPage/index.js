@@ -1,31 +1,42 @@
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 
-import Container, { Message } from '../../components/Container';
+import Container from '../../components/Container';
 import Logo from '../../components/Logo';
 import Button, { ButtonGroup } from '../../components/Button';
 import Input from '../../components/Input';
 import { Form } from './styles';
 
 export default function SignInPage() {
-	const [message, setMessage] = useState();
 	const [loading, setLoading] = useState(false);
 	const dispatch = useDispatch();
 
-	const emailRef = useRef();
-	const passwordRef = useRef();
-
 	const handleSubmit = useCallback(
-		(event) => {
-			event.preventDefault();
+		async (data) => {
 			setLoading(true);
 
-			const credentials = {
-				email: emailRef.current.value,
-				password: passwordRef.current.value,
-			};
+			try {
+				const schema = Yup.object().shape({
+					email: Yup.string().email().required(),
+					password: Yup.string().min(8).required(),
+				});
 
-			dispatch({ type: 'SIGNIN_USER_REQUESTED', credentials });
+				await schema.validate(data, {
+					abortEarly: false,
+				});
+
+				const credentials = {
+					email: data.email,
+					password: data.password,
+				};
+
+				dispatch({ type: 'SIGNIN_USER_REQUESTED', credentials });
+			} catch (err) {
+				setLoading(false);
+				err.errors.forEach(toast.error);
+			}
 		},
 		[dispatch]
 	);
@@ -33,30 +44,19 @@ export default function SignInPage() {
 	const { signinError: error } = useSelector((state) => state.user);
 	useEffect(() => {
 		if (error) {
-			setMessage(error.message);
+			toast.error(error.message);
 			setLoading(false);
 		}
 	}, [error]);
 
 	return (
 		<Container loading={loading}>
-			{message && <Message>{message}</Message>}
 			<Logo />
 
 			<Form onSubmit={handleSubmit}>
 				<ButtonGroup>
-					<Input
-						ref={emailRef}
-						name="email"
-						placeholder="E-mail"
-						type="email"
-					/>
-					<Input
-						ref={passwordRef}
-						name="password"
-						placeholder="Password"
-						type="password"
-					/>
+					<Input name="email" placeholder="E-mail" type="email" />
+					<Input name="password" placeholder="Password" type="password" />
 				</ButtonGroup>
 
 				<Button type="submit" text="Sign in" gradientText variant />

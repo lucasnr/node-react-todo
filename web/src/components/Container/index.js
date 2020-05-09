@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Wrapper, Content, Message, Loading, GoBackButton } from './styles';
+import { Wrapper, Content, Loading, GoBackButton } from './styles';
 
 export default function Container({ children, loading }) {
 	const history = useHistory();
@@ -19,5 +19,3 @@ export default function Container({ children, loading }) {
 		</Wrapper>
 	);
 }
-
-export { Message };

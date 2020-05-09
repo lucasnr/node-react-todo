@@ -33,22 +33,6 @@ export const Content = styled.div`
 	}
 `;
 
-export const Message = styled.span`
-	background-color: rgba(12, 12, 12, 0.875);
-	bottom: 0px;
-	color: ${(props) => (props.success ? '#4b4' : '#b44')};
-	font-size: 0.75rem;
-	font-size: bold;
-	left: 0px;
-	line-height: 2;
-	margin: 0px !important;
-	padding: 0.5rem;
-	position: fixed;
-	text-align: center;
-	width: 100%;
-	z-index: 5;
-`;
-
 const rotate = keyframes`
   0% {
     border-color: ${primaryColor};

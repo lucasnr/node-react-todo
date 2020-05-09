@@ -1,14 +1,22 @@
-import styled from 'styled-components';
+import React, { useEffect, useRef } from 'react';
+import { useField } from '@unform/core';
 
-const Input = styled.input`
-  background-color: #fff;
-  border: none;
-  border-radius: 9999px;
-  color: #444;
-  font-size: 0.875rem;
-  font-weight: bold;
-  padding: 0.75rem 1.25rem;
-  width: 100%;
-`;
+import { Container } from './styles';
 
-export default Input;
+export default function Input({ name, ...rest }) {
+	const inputRef = useRef(null);
+	const { fieldName, defaultValue, registerField /*error*/ } = useField(name);
+	useEffect(() => {
+		registerField({
+			name: fieldName,
+			ref: inputRef.current,
+			path: 'value',
+		});
+	}, [fieldName, registerField]);
+	return (
+		<>
+			<Container ref={inputRef} defaultValue={defaultValue} {...rest} />
+			{/* { error && <span className="error">{error}</span> } */}
+		</>
+	);
+}
