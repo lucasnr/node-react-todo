@@ -34,7 +34,7 @@ export default function SignUpPage() {
 
 				const { email, password } = data;
 				dispatch({
-					type: 'SIGNUP_USER_REQUESTED',
+					type: '@AUTH/SIGNUP_USER_REQUESTED',
 					credentials: { email, password },
 				});
 			} catch (err) {
@@ -45,7 +45,7 @@ export default function SignUpPage() {
 		[dispatch]
 	);
 
-	const { signupError: error } = useSelector((state) => state.user);
+	const { error } = useSelector((state) => state.auth);
 	useEffect(() => {
 		if (error) {
 			setLoading(false);

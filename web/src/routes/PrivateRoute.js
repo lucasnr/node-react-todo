@@ -11,9 +11,9 @@ export default function PrivateRoute({ ...props }) {
 	const [allowed, setAllowed] = useState(false);
 
 	const dispatch = useDispatch();
-	const { signed: user, error } = useSelector((state) => state.user);
+	const { token, error } = useSelector((state) => state.auth);
 	useEffect(() => {
-		if (user) {
+		if (token) {
 			setLoading(false);
 			setAllowed(true);
 			return;
@@ -25,8 +25,8 @@ export default function PrivateRoute({ ...props }) {
 			return;
 		}
 
-		dispatch({ type: 'SET_USER_REQUESTED' });
-	}, [dispatch, user]);
+		dispatch({ type: '@AUTH/SIGNIN_USER_REQUESTED' });
+	}, [dispatch, token]);
 
 	useEffect(() => {
 		if (error) {

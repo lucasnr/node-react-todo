@@ -1,23 +1,14 @@
-const INITIAL_STATE = {
-	signed: null,
-	error: null,
-};
+const INITIAL_STATE = {};
 
 export default function user(state = INITIAL_STATE, action) {
 	switch (action.type) {
-		case 'SET_USER_SUCCEEDED':
+		case '@USER/SIGNIN_USER_SUCCEEDED':
 			return { signed: action.user };
-		case 'SET_USER_FAILED':
-			return { ...state, error: action.error };
-		case 'SIGNUP_USER_FAILED':
-			return { ...state, signupError: action.error };
-		case 'SIGNIN_USER_FAILED':
-			return { ...state, signinError: action.error };
-		case 'UPDATE_USER_SUCCEEDED':
-			return { signed: action.user, updateResponse: { error: false } };
-		case 'UPDATE_USER_FAILED':
-			return { ...state, updateResponse: { error: action.error } };
-		case 'SIGNOUT_USER_SUCCEEDED':
+		case '@USER/UPDATE_USER_SUCCEEDED':
+			return { signed: action.user, response: {} };
+		case '@USER/UPDATE_USER_FAILED':
+			return { ...state, response: action.response };
+		case '@USER/REMOVE_USER':
 			return INITIAL_STATE;
 		default:
 			return state;

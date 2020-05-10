@@ -12,9 +12,7 @@ export default function ProfileEditPage() {
 	const [loading, setLoading] = useState(false);
 
 	const dispatch = useDispatch();
-	const { signed: user, updateResponse: response } = useSelector(
-		(state) => state.user
-	);
+	const { signed: user, response } = useSelector((state) => state.user);
 
 	const handleSubmit = useCallback(
 		async (data) => {
@@ -40,7 +38,7 @@ export default function ProfileEditPage() {
 				if (email !== user.email) toUpdate.email = email;
 				if (password) toUpdate.password = password;
 
-				dispatch({ type: 'UPDATE_USER_REQUESTED', user: toUpdate });
+				dispatch({ type: '@USER/UPDATE_USER_REQUESTED', user: toUpdate });
 			} catch (err) {
 				setLoading(false);
 				err.errors.forEach(toast.error);

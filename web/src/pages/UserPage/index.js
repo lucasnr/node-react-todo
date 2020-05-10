@@ -13,7 +13,7 @@ export default function UserPage() {
 
 	const dispatch = useDispatch();
 	const handleSignout = useCallback(() => {
-		dispatch({ type: 'SIGNOUT_USER_REQUESTED' });
+		dispatch({ type: '@AUTH/SIGNOUT_USER_REQUESTED' });
 	}, [dispatch]);
 
 	return user ? (

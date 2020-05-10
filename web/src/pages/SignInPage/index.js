@@ -32,7 +32,7 @@ export default function SignInPage() {
 					password: data.password,
 				};
 
-				dispatch({ type: 'SIGNIN_USER_REQUESTED', credentials });
+				dispatch({ type: '@AUTH/SIGNIN_USER_REQUESTED', credentials });
 			} catch (err) {
 				setLoading(false);
 				err.errors.forEach(toast.error);
@@ -41,7 +41,7 @@ export default function SignInPage() {
 		[dispatch]
 	);
 
-	const { signinError: error } = useSelector((state) => state.user);
+	const { error } = useSelector((state) => state.auth);
 	useEffect(() => {
 		if (error) {
 			toast.error(error.message);
