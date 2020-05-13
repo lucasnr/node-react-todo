@@ -2,7 +2,19 @@
 
 ## How to run
 
-Install the packages using `yarn install` or `npm install`. Then, run the app using `yarn start` or `npm start`. The server will run at port 3333.
+First of all, install the packages
+
+```shell
+yarn
+```
+
+Then, run the app
+
+```shell
+yarn start
+```
+
+The server will run at port 3333.
 
 ## Made with
 

@@ -2,7 +2,19 @@
 
 ## How to run
 
-Install the packages using `yarn install` or `npm install`. Then, run the app using `yarn start` or `npm start`. Open the browser at `localhost:3000`.
+Install the packages using
+
+```shell
+yarn
+```
+
+Then, run the app using
+
+```shell
+yarn start
+```
+
+Open the browser at `localhost:3000`.
 
 ## Made with
 
